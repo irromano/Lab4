@@ -53,7 +53,7 @@ public class Sudoku extends LatinSquare {
 	 * @version 1.0
 	 * @since Lab #4
 	 */
-	public class Cell {
+	private class Cell {
 		private int iCol;
 		private int iRow;
 		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
@@ -85,7 +85,7 @@ public class Sudoku extends LatinSquare {
 //			if (!(obj instanceof Cell)) {
 //				return false;
 //			}
-			
+
 			Cell cell1 = (Cell) obj;
 			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
 		}
@@ -96,6 +96,7 @@ public class Sudoku extends LatinSquare {
 
 		public void setLstValidValues() {
 			HashSet<Integer> validHash = new HashSet<Integer>();
+			
 			for (int i = 1; i <= iSize; i++) {
 				if (isValidValue(iRow, iCol, i)) {
 					validHash.add(i);
@@ -118,18 +119,24 @@ public class Sudoku extends LatinSquare {
 			}
 
 		}
-
-		public Sudoku.Cell GetNextCell(Sudoku.Cell c, int iSize) {
-			if (iCol < iSize - 1) {
-				Sudoku.Cell nextCell = new Sudoku.Cell(iRow, iCol + 1);
-				return nextCell;
-			} else {
-				Sudoku.Cell nextCell = new Sudoku.Cell(iRow + 1, 0);
-				return nextCell;
+		
+		public Sudoku.Cell GetNextCell(Sudoku.Cell c) {
+			Integer index = c.hashCode();
+			index++;
+			if(index >= iSize*iSize||index<0)
+				return null;
+			while(getPuzzle()[index/iSize][index%iSize-1] != 0) {
+				index++;
 			}
+			return (Sudoku.Cell) cells.get(index);
 
 		}
 
+
+	}
+	
+	private HashMap<Integer, Sudoku.Cell> getCells() {
+		return cells;
 	}
 
 	/**
@@ -541,13 +548,19 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 
-	public HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
+	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
+		HashSet<Integer> cellHashSet = new HashSet<Integer>();
 		Cell newCell = new Cell(iRow, iCol);
 		newCell.setLstValidValues();
-		HashSet<Integer> cellHashSet = new HashSet<Integer>(newCell.getLstValidValues());
+		if (this.getLatinSquare()[iRow][iCol] != 0) {
+			cellHashSet.add(this.getLatinSquare()[iRow][iCol]);
+		} else {
+			cellHashSet = new HashSet<Integer>(newCell.getLstValidValues());
+		}
 		return cellHashSet;
 
 	}
+
 	public HashSet<Integer> getAllValidCellValues(Cell newCell, int iRow, int iCol) {
 		newCell.setLstValidValues();
 		HashSet<Integer> cellHashSet = new HashSet<Integer>(newCell.getLstValidValues());
