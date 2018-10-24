@@ -208,10 +208,24 @@ public class SudokuTest {
 //
 //	}
 
-//	
-//
-//
-//
-//
-//
+
+	/**
+	 * Sudoku Constructor Test1 - This test ensures that the constructor returns a true Sudoku.
+	 * It implicitly tests setCells, fillRemaining and all cell functions.
+	 * 
+	 */
+	@Test
+	public void Sudoku_Test1() {
+		try {
+			Sudoku s1 = new Sudoku(9); // a 9x9 Sudoku.
+			s1.PrintPuzzle();			// prints the puzzle
+			assertTrue(s1.isSudoku());	// checks if the puzzle is a true Sudoku
+
+		} catch (Exception e) {
+			fail("Test failed to build a Sudoku");
+		}
+		
+
+	}
+
 }
